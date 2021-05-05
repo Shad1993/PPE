@@ -1,0 +1,579 @@
+/*
+ * tp.c
+ *
+ *  Created on: Nov 13, 2019
+ *      Author: RESHAD ODERUTH
+ */
+#include <stdlib.h>
+#include <stdio.h>
+#in /*
+ * tp.c
+ *
+ *  Created on: Nov 13, 2019
+ *      Author: RESHAD ODERUTH
+ */
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+// fonctions
+
+void dechiffrage (char mdp[50], char ces[50] , int decal)
+{
+//variables locaux
+int  i , j ,k ;                // indices des boucles
+char ch, c ,c1;                // characteres pour les conversions
+int K = 0;                     // la clef K
+int hash = 0;                  // calcul du hash
+int n = strlen (mdp);          // longeur du string mdp
+int m = strlen(ces);           // longeur du string ces
+int asci ;                     // code asci
+int asciText ;                 // code asci des characteres du mot de passe
+
+//calcule du hash entre les characteres
+for ( i = 0 ; i < n ; i++)  // boucle  conversion string en characteres
+{
+c= mdp[i] ;             // string en characteres
+asciText = c;           // characteres en code asci
+hash ^= asciText ;      // hash( XOR entre les characteres du mdp)
+}
+
+// le calcule du K
+K = hash ^ decal ;         //calcul de la clef K
+
+   // cryptage XOR des characteres du text
+for (k = 0 ; k < m ; k++)  // boucle  conversion string en characteres
+{
+   c1 = ces[k];      // string en characteres
+c1 = c1 ^ K ;     // XOR de chaque characteres du text et la clef K
+ces[k]= c1 ;      // retours du code cryptee en string
+}
+   //decryptage du code cesar
+for ( j = 0 ; ces[j] != '\0' ; ++j ) // boucle conversion string en characteres
+{
+ch = ces[j] ;                       // string en characteres
+asci = ch ;
+
+// pour les characteres minuscules
+if ( asci >= 97  && asci <= 122 )       // condition que les characters sont des alphabetes
+{
+asci = asci - decal ;          // decryptage cesar des codes asci
+if ( asci < 97)
+{
+asci = asci + 26 ;  // si le code asci  est moins de a on la retourne en alphabet
+}
+
+            ch = asci ;                // conversion asci en characteres
+ces[j]= ch ;              // retour en boucle
+
+}
+
+// pour les characteres majuscules
+else if ( asci >= 65   && asci  <= 90 ) // condition que les characters sont des alphabetes
+{
+asci = asci - decal ;              // decryptage cesar des codes asci
+if ( asci < 65)
+{
+asci = asci + 26 ; // si le code asci  est moins de a on la retourne en alphabet
+}
+ch = asci ;                    // conversion asci en characteres
+ces[j]= ch ;                  // retour en boucle
+
+}
+}
+}
+void chiffrage(char mdp[50],char ces[50], int decal)
+
+{
+//variables locaux
+int  i , j , k ;                      // indices des boucles
+char ch, c , c1 ;                     // characteres pour les conversions
+int K = 0;                            // calcule de la clef K
+int hash = 0;                         // calcul du hash
+int n = strlen (mdp);                 // longeur du mdp
+int m = strlen(ces);                  // longeur du text
+int asci ;                            // code asci
+int asciText ;                        // code asci des characteres du mot de passe
+
+//calcule du hash entre les characteres
+for ( i = 0 ; i < n ; i++)               // boucle conversion string en characteres
+{
+c= mdp[i] ;                          // conversion string en characteres
+asciText = c ;                       // conversion code characteres en code asci
+hash ^= asciText ;                          // calcul du hash
+}
+// le calcule du K
+K = hash ^ decal ; // calcule de la clef K
+
+// cryptage cesar
+for ( j = 0 ; ces[j] != '\0' ; ++j )     // boucle conversion string en characteres
+{
+
+ch = ces[j] ;                            // conversion string en characteres
+asci = ch ;
+// pour les characteres minuscules
+if ( asci >= 97 && asci <= 122 )          // condition que les characters sont alphabet
+{
+asci = asci + decal ;               //  cryptage cesar
+if ( asci > 122)
+{
+asci = asci - 26 ; // si charactere cryptee  est plus que le Z on la retourne comme aplhabet
+}
+ch = asci ;
+ces[j]= ch ;                    // retours en boucle
+
+}
+
+// pour les characteres majuscules
+else if ( asci >= 65  && asci  <= 90 )      // condition que les characters sont alphabet
+{
+asci = asci + decal ;               //  cryptage cesar
+if ( asci > 90)
+{
+asci = asci - 26 ;        // si charactere cryptee  est plus que le Z on la retourne comme aplhabet
+}
+ch = asci ;                       // conversion asci en characteres
+
+ces[j]= ch ;                      // retours en boucle
+}
+}
+// calcule du XOR
+for (k = 0 ; k < m ; k++)    //boucle conversion string en characteres
+{
+c1 = ces[k];        // string en characteres
+c1 = c1 ^ K ;      // XOR des characteres avec la clef K
+ces[k]= c1 ;      // retours en string
+
+}
+}
+void encrypter (char ces[40],char mdp[50])
+{
+// variables locaux
+
+char renam[20];                         // le nom du nouveau fichier de stockage
+int decal ;                             // decallage du cesar
+
+FILE * fichier;                         // appel fonction fichier
+
+
+
+printf("Nomez le fichier de la sauvegarde\n");        // intitialisation du fichier de sauvegarde
+scanf("%s", renam);                                   // affectation du fichier de sauvegarde
+
+//ouvrir le fichier txt
+fichier = fopen(renam,"w");                           // ouverture du fichier de sauvegarde
+
+   //condition mauvaise ou bonne lecture
+if ( fichier == NULL )
+{
+ printf("echec creation fichier\n");                 // si fichier vide, fermeture du programme
+ exit(1);
+}
+
+printf("inserez- votre texte\n");                     // initialisation et affectation du text
+getchar();
+gets(ces);
+
+printf("inserez un decallage\n");                  // initialisation et affectation du decallage
+scanf("%d", &decal);
+
+if (decal >= 26)
+{
+ decal = (decal % 26);
+}
+
+printf("\ninserez votre mot de passe\n");              // initialisation et affectation du mdp
+scanf("%s" ,mdp);
+
+chiffrage(mdp,ces,decal);                                //  appel de la fonction de cryptage XOR
+printf("Voici le message cryptee : %s\n", ces);     // affichage resultat apres cryptage a l'ecrant
+
+   fprintf(fichier,"%s", ces);                         // affichage resultat apres cryptage a l'ecrant
+   fclose(fichier);                                    // fermeture fichier
+
+}
+void decrypter(char ces[40], char mdp[50])
+{
+// variables locaux
+                                        // choix de la source du text
+char renam[20];                                  // le nom du nouveau fichier de stockage
+int decal ;                                      // decallage du cesar
+    char flname[20];                                 // nom du fichier de lecture
+FILE * fichier;                                  // appel fonction fichier
+
+
+
+
+
+
+printf("\ninserez le nom de votre fichier\n"); // nom fichier de lecture
+scanf("%s", flname);                         // affectation du nom de fichier
+
+
+fichier = fopen(flname,"r");                  // mode lecture seul du fichier de lecture
+//condition mauvaise ou bonne lecture
+if ( fichier == NULL )                        // si fichier vide, fermeture fichier
+{
+ printf("echec ouverture fichier\n");
+ exit(1);
+}
+
+fgets(ces,50,fichier) ;                        // lecture text depuis fichier
+printf("\nvoici le message initial: %s\n", ces);// affichage text initial present dans le fichier txt
+
+printf("\nNomez le fichier de sauvegarde\n");   // initislisation fichier de sauvegarde
+scanf("%s" , renam);                          // initialisation fichier de sauvegarde
+
+//ouvrir le fichier txt
+fichier = fopen(renam,"w");                   // ouverture mode ecriture seul
+
+//condition mauvaise ou bonne lecture
+if ( fichier == NULL )                        // si fichier vide, alors fermeture fichier
+{
+printf("echec creation fichier\n");
+exit(1);
+}
+fprintf(fichier,"\nvoici le texte initial:%s\n", ces); // ecriture du code initial dans le fichier de sauvegarde
+
+printf("\ninserez votre mot de passe\n");               // initialisation mdp
+scanf("%s" ,mdp);                                     // affectation mdp
+
+printf("\ninserez un decallage\n");                     // initialisation du decallage
+scanf("%d", &decal);                                  // affectation decallage
+
+if (decal >= 26)
+   {
+       decal = (decal % 26);
+   }
+
+
+dechiffrage(mdp,ces, decal);                           // appel de la fonction de decryptage
+
+printf("\nVoici le message decryptee : %s\n", ces);     // affichage du code decryptee a l'ecrant
+
+fprintf(fichier,"\nvoici le message decrypter cesar:%s\n", ces); // affichage du code decryptee dans le fichier de sauvegarde
+fclose(fichier);                                       // fermeture fichier de lecture
+
+
+  }
+int main()
+{
+// variables
+char ces[40] ;                     // code ou phrase
+char mdp[50];                      // mot de passe
+int choix;                         // choix de decryptage ou de decryptage
+
+
+//innitialisation des valeurs pour le premier choix
+printf("Bonjour, et bienvenue sur  le programme de Shakes\n\n");
+printf("Pour encrypter tapez 1)?\n");
+printf("Pour decrypter tapez 2?\n");
+printf("pour fermer  tapez   3 \n");
+
+scanf("%d", &choix);                //affectation de choix
+
+// le switch pour le choix entre le encryptage et decryptage
+switch(choix)
+{
+case 1 :// encryptage
+encrypter(ces,mdp);           // apeller la fonction cryptage
+break;
+
+case 2:// decryptage
+decrypter(ces,mdp);           // appeller la fonction decryptage
+break;
+
+case 3 :// cloture
+exit(1);                     //sorti du program
+break;
+
+default :// mauvaise frappe
+printf("lisez correctement les instructions\n");
+break;
+}
+
+
+ system ("pause");
+
+return 0;
+}  clude <string.h>
+// fonctions
+
+void dechiffrage (char mdp[50], char ces[50] , int decal)
+{
+//variables locaux
+int  i , j ,k ;                // indices des boucles
+char ch, c ,c1;                // characteres pour les conversions
+int K = 0;                     // la clef K
+int hash = 0;                  // calcul du hash
+int n = strlen (mdp);          // longeur du string mdp
+int m = strlen(ces);           // longeur du string ces
+int asci ;                     // code asci
+int asciText ;                 // code asci des characteres du mot de passe
+
+//calcule du hash entre les characteres
+for ( i = 0 ; i < n ; i++)  // boucle  conversion string en characteres
+{
+c= mdp[i] ;             // string en characteres
+asciText = c;           // characteres en code asci
+hash ^= asciText ;      // hash( XOR entre les characteres du mdp)
+}
+
+// le calcule du K
+K = hash ^ decal ;         //calcul de la clef K
+
+   // cryptage XOR des characteres du text
+for (k = 0 ; k < m ; k++)  // boucle  conversion string en characteres
+{
+   c1 = ces[k];      // string en characteres
+c1 = c1 ^ K ;     // XOR de chaque characteres du text et la clef K
+ces[k]= c1 ;      // retours du code cryptee en string
+}
+   //decryptage du code cesar
+for ( j = 0 ; ces[j] != '\0' ; ++j ) // boucle conversion string en characteres
+{
+ch = ces[j] ;                       // string en characteres
+asci = ch ;
+
+// pour les characteres minuscules
+if ( asci >= 97  && asci <= 122 )       // condition que les characters sont des alphabetes
+{
+asci = asci - decal ;          // decryptage cesar des codes asci
+if ( asci < 97)
+{
+asci = asci + 26 ;  // si le code asci  est moins de a on la retourne en alphabet
+}
+
+            ch = asci ;                // conversion asci en characteres
+ces[j]= ch ;              // retour en boucle
+
+}
+
+// pour les characteres majuscules
+else if ( asci >= 65   && asci  <= 90 ) // condition que les characters sont des alphabetes
+{
+asci = asci - decal ;              // decryptage cesar des codes asci
+if ( asci < 65)
+{
+asci = asci + 26 ; // si le code asci  est moins de a on la retourne en alphabet
+}
+ch = asci ;                    // conversion asci en characteres
+ces[j]= ch ;                  // retour en boucle
+
+}
+}
+}
+void chiffrage(char mdp[50],char ces[50], int decal)
+
+{
+//variables locaux
+int  i , j , k ;                      // indices des boucles
+char ch, c , c1 ;                     // characteres pour les conversions
+int K = 0;                            // calcule de la clef K
+int hash = 0;                         // calcul du hash
+int n = strlen (mdp);                 // longeur du mdp
+int m = strlen(ces);                  // longeur du text
+int asci ;                            // code asci
+int asciText ;                        // code asci des characteres du mot de passe
+
+//calcule du hash entre les characteres
+for ( i = 0 ; i < n ; i++)               // boucle conversion string en characteres
+{
+c= mdp[i] ;                          // conversion string en characteres
+asciText = c ;                       // conversion code characteres en code asci
+hash ^= asciText ;                          // calcul du hash
+}
+// le calcule du K
+K = hash ^ decal ; // calcule de la clef K
+
+// cryptage cesar
+for ( j = 0 ; ces[j] != '\0' ; ++j )     // boucle conversion string en characteres
+{
+
+ch = ces[j] ;                            // conversion string en characteres
+asci = ch ;
+// pour les characteres minuscules
+if ( asci >= 97 && asci <= 122 )          // condition que les characters sont alphabet
+{
+asci = asci + decal ;               //  cryptage cesar
+if ( asci > 122)
+{
+asci = asci - 26 ; // si charactere cryptee  est plus que le Z on la retourne comme aplhabet
+}
+ch = asci ;
+ces[j]= ch ;                    // retours en boucle
+
+}
+
+// pour les characteres majuscules
+else if ( asci >= 65  && asci  <= 90 )      // condition que les characters sont alphabet
+{
+asci = asci + decal ;               //  cryptage cesar
+if ( asci > 90)
+{
+asci = asci - 26 ;        // si charactere cryptee  est plus que le Z on la retourne comme aplhabet
+}
+ch = asci ;                       // conversion asci en characteres
+
+ces[j]= ch ;                      // retours en boucle
+}
+}
+// calcule du XOR
+for (k = 0 ; k < m ; k++)    //boucle conversion string en characteres
+{
+c1 = ces[k];        // string en characteres
+c1 = c1 ^ K ;      // XOR des characteres avec la clef K
+ces[k]= c1 ;      // retours en string
+
+}
+}
+void encrypter (char ces[40],char mdp[50])
+{
+// variables locaux
+
+char renam[20];                         // le nom du nouveau fichier de stockage
+int decal ;                             // decallage du cesar
+
+FILE * fichier;                         // appel fonction fichier
+
+
+
+printf("Nomez le fichier de la sauvegarde\n");        // intitialisation du fichier de sauvegarde
+scanf("%s", renam);                                   // affectation du fichier de sauvegarde
+
+//ouvrir le fichier txt
+fichier = fopen(renam,"w");                           // ouverture du fichier de sauvegarde
+
+   //condition mauvaise ou bonne lecture
+if ( fichier == NULL )
+{
+ printf("echec creation fichier\n");                 // si fichier vide, fermeture du programme
+ exit(1);
+}
+
+printf("inserez- votre texte\n");                     // initialisation et affectation du text
+getchar();
+gets(ces);
+
+printf("inserez un decallage\n");                  // initialisation et affectation du decallage
+scanf("%d", &decal);
+
+if (decal >= 26)
+{
+ decal = (decal % 26);
+}
+
+printf("\ninserez votre mot de passe\n");              // initialisation et affectation du mdp
+scanf("%s" ,mdp);
+
+chiffrage(mdp,ces,decal);                                //  appel de la fonction de cryptage XOR
+printf("Voici le message cryptee : %s\n", ces);     // affichage resultat apres cryptage a l'ecrant
+
+   fprintf(fichier,"%s", ces);                         // affichage resultat apres cryptage a l'ecrant
+   fclose(fichier);                                    // fermeture fichier
+
+}
+void decrypter(char ces[40], char mdp[50])
+{
+// variables locaux
+                                        // choix de la source du text
+char renam[20];                                  // le nom du nouveau fichier de stockage
+int decal ;                                      // decallage du cesar
+    char flname[20];                                 // nom du fichier de lecture
+FILE * fichier;                                  // appel fonction fichier
+
+
+
+
+
+
+printf("\ninserez le nom de votre fichier\n"); // nom fichier de lecture
+scanf("%s", flname);                         // affectation du nom de fichier
+
+
+fichier = fopen(flname,"r");                  // mode lecture seul du fichier de lecture
+//condition mauvaise ou bonne lecture
+if ( fichier == NULL )                        // si fichier vide, fermeture fichier
+{
+ printf("echec ouverture fichier\n");
+ exit(1);
+}
+
+fgets(ces,50,fichier) ;                        // lecture text depuis fichier
+printf("\nvoici le message initial: %s\n", ces);// affichage text initial present dans le fichier txt
+
+printf("\nNomez le fichier de sauvegarde\n");   // initislisation fichier de sauvegarde
+scanf("%s" , renam);                          // initialisation fichier de sauvegarde
+
+//ouvrir le fichier txt
+fichier = fopen(renam,"w");                   // ouverture mode ecriture seul
+
+//condition mauvaise ou bonne lecture
+if ( fichier == NULL )                        // si fichier vide, alors fermeture fichier
+{
+printf("echec creation fichier\n");
+exit(1);
+}
+fprintf(fichier,"\nvoici le texte initial:%s\n", ces); // ecriture du code initial dans le fichier de sauvegarde
+
+printf("\ninserez votre mot de passe\n");               // initialisation mdp
+scanf("%s" ,mdp);                                     // affectation mdp
+
+printf("\ninserez un decallage\n");                     // initialisation du decallage
+scanf("%d", &decal);                                  // affectation decallage
+
+if (decal >= 26)
+   {
+       decal = (decal % 26);
+   }
+
+
+dechiffrage(mdp,ces, decal);                           // appel de la fonction de decryptage
+
+printf("\nVoici le message decryptee : %s\n", ces);     // affichage du code decryptee a l'ecrant
+
+fprintf(fichier,"\nvoici le message decrypter cesar:%s\n", ces); // affichage du code decryptee dans le fichier de sauvegarde
+fclose(fichier);                                       // fermeture fichier de lecture
+
+
+  }
+int main()
+{
+// variables
+char ces[40] ;                     // code ou phrase
+char mdp[50];                      // mot de passe
+int choix;                         // choix de decryptage ou de decryptage
+
+
+//innitialisation des valeurs pour le premier choix
+printf("Bonjour, et bienvenue sur  le programme de Shakes\n\n");
+printf("Pour encrypter tapez 1)?\n");
+printf("Pour decrypter tapez 2?\n");
+printf("pour fermer  tapez   3 \n");
+
+scanf("%d", &choix);                //affectation de choix
+
+// le switch pour le choix entre le encryptage et decryptage
+switch(choix)
+{
+case 1 :// encryptage
+encrypter(ces,mdp);           // apeller la fonction cryptage
+break;
+
+case 2:// decryptage
+decrypter(ces,mdp);           // appeller la fonction decryptage
+break;
+
+case 3 :// cloture
+exit(1);                     //sorti du program
+break;
+
+default :// mauvaise frappe
+printf("lisez correctement les instructions\n");
+break;
+}
+
+
+ system ("pause");
+
+return 0;
+}
